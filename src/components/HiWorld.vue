@@ -1,7 +1,7 @@
 <template>
     <div class="a">
         <div>
-            Hello, {{username}} <br/>
+            Hi, {{username}} <br/>
             Password: {{password}}
         </div>
     </div>
@@ -12,19 +12,17 @@
   import {UserService} from "@/service/UserService";
   import {PasswordService} from "@/service/PasswordService";
 
-
   @Options({})
-  export default class HelloWorld extends Vue {
-
+  export default class HiWorld extends Vue {
     private username = "";
     private password = "";
 
     created() {
-      UserService.onChange("Hello1", (username: string) => {
+      UserService.onChange("Hi1", (username: string) => {
         this.username = username;
       })
 
-      PasswordService.onChange("Pwd1", (password: string) => {
+      PasswordService.onChange("Hi2", (password: string) => {
         this.password = password;
       })
     }
@@ -39,6 +37,6 @@
         display: flex;
         align-items: center;
         place-content: center;
-        background: #ccc;
+        background: #ffc7c7;
     }
 </style>
