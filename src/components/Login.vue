@@ -1,44 +1,64 @@
 <template>
     <div class="login">
-        <label>
-            <input style="width: 300px" type="text" v-model="username"/>
-        </label>
-        <label>
-            <input style="width: 300px" type="text" v-model="password"/>
-        </label>
-        <label>
-            <button @click="login"/>
-        </label>
+        <input placeholder="username" type="text" v-model="username"/>
+        <input placeholder="password" type="password" v-model="password"/>
+        <button @click="login">Login</button>
+        <span>{{passwordRender()}}</span>
     </div>
 </template>
 
 <script lang="ts">
-  import {Watch} from 'vue-property-decorator';
   import {Options, Vue} from "vue-class-component";
-  import {UserService} from "@/service/UserService";
-  import {PasswordService} from "@/service/PasswordService";
+  import {Prop} from "vue-property-decorator";
+  import {useMemo} from "@/components/hook/MemoCustom";
 
   @Options({})
   export default class Login extends Vue {
-    private username = ""
-    private password = ""
+    @Prop({required: false, default: false}) private loading: boolean;
+    private username = "";
+    private password = "";
 
-    @Watch("username")
-    watchUsername(v: string) {
-      UserService.set(v)
+    private memo = useMemo(() => this.changeText(this.password));
+
+    // useMemo
+    passwordRender() {
+      return this.memo(this.password);
     }
 
-    @Watch("password")
-    watchPassword(v: string) {
-      PasswordService.set(v)
+    changeText(text: string) {
+      console.log("COMPLEX LOGICCCC")
+      return text + "   <= đây là password";
     }
+
 
     login() {
-      this.$emit("login")
+      this.$emit("login", this.username, this.password);
     }
 
   }
 </script>
 
 <style scoped>
+    .login {
+        margin: 100px auto;
+        display: flex;
+        justify-content: center;
+        width: 500px;
+        border: 1px solid #ccc;
+        border-radius: 15px;
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .login input {
+        margin-top: 20px;
+        height: 25px;
+    }
+
+    .login button {
+        margin-top: 20px;
+        width: 200px;
+        height: 25px;
+        place-self: center;
+    }
 </style>

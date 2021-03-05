@@ -1,47 +1,46 @@
 <template>
-    <div class="container" v>
-        <HelloWorld :a="loading" />
-        <HiWorld :a="loading" />
+    <div v-show="isLoggedIn" class="container" v>
+        <HelloWorld/>
     </div>
-    <div class="login-form">
-        <Login @login="login" />
+    <div v-show="!isLoggedIn" class="login-form">
+        <Login :loading="loading" @login="login"/>
     </div>
 </template>
 
 <script lang="ts">
   import {Options, Vue} from "vue-class-component";
   import HelloWorld from "./components/HelloWorld.vue";
-  import HiWorld from "@/components/HiWorld.vue";
   import Login from "@/components/Login.vue";
-  import {UserService} from "@/service/UserService";
+  import {$store} from "@/service/store";
+  import {User} from "@/service/user/UserService";
 
   @Options({
     components: {
       HelloWorld,
       Login,
-      HiWorld,
     }
   })
   export default class App extends Vue {
     private loading: boolean = false;
+    private isLoggedIn: boolean = false;
 
-    async login () {
+    created() {
+      $store.user.onChange("APP", (user: User) => {
+        if (user) {
+          this.isLoggedIn = true;
+        }
+      })
+      console.log(this.isLoggedIn)
+
+    }
+
+    async login(username: string, password: string) {
       this.loading = true;
-      await UserService.login();
+      await $store.user.loginAsyncAwait(username, password);
       this.loading = false;
     }
   }
 </script>
 
 <style>
-    .container {
-        display: flex;
-        width: 50%;
-        margin: 100px auto;
-    }
-
-    .login-form {
-        display: flex;
-        place-content: center;
-    }
 </style>

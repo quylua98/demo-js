@@ -2,30 +2,22 @@
     <div class="a">
         <div>
             Hello, {{username}} <br/>
-            Password: {{password}}
         </div>
     </div>
 </template>
 
 <script lang="ts">
   import {Options, Vue} from "vue-class-component";
-  import {UserService} from "@/service/UserService";
-  import {PasswordService} from "@/service/PasswordService";
-
+  import {$store} from "@/service/store";
+  import {User} from "@/service/user/UserService";
 
   @Options({})
   export default class HelloWorld extends Vue {
-
     private username = "";
-    private password = "";
 
     created() {
-      UserService.onChange("Hello1", (username: string) => {
-        this.username = username;
-      })
-
-      PasswordService.onChange("Pwd1", (password: string) => {
-        this.password = password;
+      $store.user.onChange("Hello1", (user: User) => {
+        this.username = user.username;
       })
     }
 
